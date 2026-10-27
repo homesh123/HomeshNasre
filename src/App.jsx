@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const container = {
@@ -99,9 +99,45 @@ const learning = [
 
 export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const canvasRef = useRef(null)
+
+  useEffect(() => {
+    const c = canvasRef.current
+    if (!c) return
+    const ctx = c.getContext('2d')
+    let W, H, pts = []
+    const resize = () => { W = c.width = window.innerWidth; H = c.height = window.innerHeight }
+    resize()
+    window.addEventListener('resize', resize)
+    for (let i = 0; i < 70; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, r: Math.random() * 1.5 + 0.5 })
+    let raf
+    const draw = () => {
+      ctx.clearRect(0, 0, W, H)
+      pts.forEach(p => {
+        p.x += p.vx; p.y += p.vy
+        if (p.x < 0 || p.x > W) p.vx *= -1
+        if (p.y < 0 || p.y > H) p.vy *= -1
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = 'rgba(34,211,238,0.5)'; ctx.fill()
+      })
+      for (let i = 0; i < pts.length; i++) {
+        for (let j = i + 1; j < pts.length; j++) {
+          const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y)
+          if (d < 140) {
+            ctx.strokeStyle = `rgba(20,184,166,${0.1 * (1 - d / 140)})`
+            ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke()
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
+  }, [])
 
   return (
     <>
+      <canvas ref={canvasRef} style={{position:'fixed',inset:0,zIndex:-1,pointerEvents:'none'}} />
       <nav className="nav">
         <div className="nav-inner">
           <a href="#hero" className="logo" onClick={() => setMobileOpen(false)}>HN</a>
