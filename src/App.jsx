@@ -156,7 +156,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="skills" className="section" style={{ background: '#0a0a0f' }}>
+      <section id="skills" className="section">
         <div className="container">
           <motion.div variants={container} initial="hidden" animate="show">
             <h2>Skills</h2>
@@ -191,7 +191,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="projects" className="section" style={{ background: '#0a0a0f' }}>
+      <section id="projects" className="section">
         <div className="container">
           <motion.div variants={container} initial="hidden" animate="show">
             <h2>Projects</h2>
@@ -227,7 +227,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="services" className="section" style={{ background: '#0a0a0f' }}>
+      <section id="services" className="section">
         <div className="container">
           <motion.div variants={container} initial="hidden" animate="show">
             <h2>Freelance & Consulting</h2>
@@ -261,7 +261,7 @@ export default function App() {
         </div>
       </section>
 
-      <section id="contact" className="section" style={{ background: '#0a0a0f' }}>
+      <section id="contact" className="section">
         <div className="container contact">
           <motion.div variants={container} initial="hidden" animate="show">
             <h2>Let's build something great</h2>
