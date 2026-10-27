@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://homesh123.github.io/HomeshNasre/sitemap.xml
