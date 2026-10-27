@@ -1,316 +1,321 @@
-import { useEffect, useState, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence, MotionConfig, LayoutGroup } from 'framer-motion'
+import Nav from './components/Nav'
+import Hero from './components/Hero'
+import CommandPalette from './components/CommandPalette'
+import { Section, RevealGroup, CountUp, reveal, usePointerGlow, useActiveSection, Arrow, ExternalIcon } from './components/ui'
+import {
+  sections, stats, domains, skillGroups, marquee, learning, experiences, visibleRoles,
+  projects, projectFilters, services, process, faqs, links,
+} from './data'
 
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.12 } },
+const sectionIds = sections.map((s) => s.id)
+
+function About() {
+  return (
+    <Section id="about" eyebrow="About" title="Architecture-minded. Product-focused.">
+      <div className="about-grid">
+        <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
+          <p className="about-text">
+            I've spent 15+ years building web products end to end — from gathering requirements and shaping
+            architecture to shipping, testing, and maintaining. I've led teams of 8+, mentored developers, and worked
+            with clients across North America, Norway, Australia, and Germany.
+          </p>
+          <p className="about-text">
+            I care about clean code, performance, and shipping products people actually enjoy using.
+          </p>
+          <ul className="tag-row" aria-label="Industries">
+            {domains.map((d) => <li key={d} className="tag">{d}</li>)}
+          </ul>
+        </motion.div>
+        <RevealGroup className="stats">
+          {stats.map((s) => (
+            <motion.div key={s.label} className="stat spotlight" variants={reveal}>
+              <span className="stat-num"><CountUp value={s.value} suffix={s.suffix} /></span>
+              <span className="stat-label">{s.label}</span>
+            </motion.div>
+          ))}
+        </RevealGroup>
+      </div>
+    </Section>
+  )
 }
-const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
+
+function Skills() {
+  return (
+    <Section id="skills" eyebrow="Skills" title="The toolkit" intro="Deep in the Angular & React ecosystems, with AI-assisted workflows on top.">
+      <RevealGroup className="skill-groups">
+        {skillGroups.map((g) => (
+          <motion.article key={g.title} className="card skill-group spotlight" variants={reveal}>
+            <div className="skill-group-head">
+              <span className="icon-tile" aria-hidden="true">{g.icon}</span>
+              <h3>{g.title}</h3>
+            </div>
+            <ul className="skill-list">
+              {g.skills.map((s) => (
+                <li key={s.name}>
+                  <strong>{s.name}</strong>
+                  <span>{s.desc}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.article>
+        ))}
+      </RevealGroup>
+
+      <div className="marquee" aria-label="Technologies">
+        <div className="marquee-track">
+          {[...marquee, ...marquee].map((t, i) => (
+            <span key={i} className="marquee-item" aria-hidden={i >= marquee.length}>{t}</span>
+          ))}
+        </div>
+      </div>
+
+      <motion.div className="learning" variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
+        <div className="learning-head">
+          <span className="live-dot" aria-hidden="true" />
+          <h3>Currently learning</h3>
+        </div>
+        <ul className="learning-list">
+          {learning.map((l) => (
+            <li key={l.name}><strong>{l.name}</strong><span>{l.desc}</span></li>
+          ))}
+        </ul>
+        <p className="muted small">
+          I study AI courses and certifications on generative AI, agentic workflows, and modern frontend architecture
+          to keep my consulting practice current.
+        </p>
+      </motion.div>
+    </Section>
+  )
 }
 
-const heroVariants = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1 },
+function Experience() {
+  const [showAll, setShowAll] = useState(false)
+  const shown = showAll ? experiences : experiences.slice(0, visibleRoles)
+  const hidden = experiences.length - visibleRoles
+
+  return (
+    <Section id="experience" eyebrow="Experience" title="15+ years, one timeline">
+      <ol className="timeline">
+        <AnimatePresence initial={false}>
+          {shown.map((e, i) => (
+            <motion.li
+              key={e.role + e.company}
+              className={`tl-item ${i === 0 ? 'current' : ''}`}
+              variants={reveal}
+              initial="hidden"
+              whileInView="show"
+              exit={{ opacity: 0, y: -10 }}
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <span className="tl-dot" aria-hidden="true" />
+              <div className="tl-card spotlight">
+                <div className="tl-head">
+                  <div>
+                    <h3>{e.role}</h3>
+                    <p className="tl-company">{e.company}</p>
+                  </div>
+                  <span className="tl-date">{e.date}</span>
+                </div>
+                <ul className="tl-bullets">
+                  {e.bullets.map((b) => <li key={b}>{b}</li>)}
+                </ul>
+              </div>
+            </motion.li>
+          ))}
+        </AnimatePresence>
+      </ol>
+      {hidden > 0 && (
+        <div className="center">
+          <button type="button" className="btn btn-ghost" aria-expanded={showAll} onClick={() => setShowAll((s) => !s)}>
+            {showAll ? 'Show fewer roles' : `Show ${hidden} earlier roles`}
+            <span className={`chev ${showAll ? 'up' : ''}`} aria-hidden="true">▾</span>
+          </button>
+        </div>
+      )}
+    </Section>
+  )
 }
 
-const projects = [
-  {
-    name: 'Luprolink',
-    desc: 'Drug inventory & shipment management. Lead Front-end. Keycloak + Angular 11.',
-    tech: 'Angular 11, Keycloak, D3, Highcharts',
-  },
-  {
-    name: 'Commscope Quareo',
-    desc: 'Network management station web app. UI dev, catalog templates. 2014–2017.',
-    tech: 'AngularJS, HTML/CSS, jQuery',
-  },
-  {
-    name: 'Motorola Mobility Catalog',
-    desc: 'Sales portal for mobile devices. Responsive templates + AngularJS. 2014.',
-    tech: 'AngularJS, HTML/CSS, jQuery',
-  },
-  {
-    name: 'Harmonic SM',
-    desc: 'Video processing hardware management. UI improvements. 2014.',
-    tech: 'HTML/CSS, JavaScript',
-  },
-  {
-    name: 'Baker Hughes FastOil',
-    desc: 'Well drilling portal. GUI + JSP integration. 2013.',
-    tech: 'JSP, HTML/CSS, JavaScript',
-  },
-  {
-    name: 'Forex24hr.com',
-    desc: 'Forex trading platform. Responsive UI, charts, and order flow for traders.',
-    tech: 'HTML5, CSS3, JavaScript, Chart.js',
-  },
-  {
-    name: 'TradeSagar.com',
-    desc: 'Trading and investment dashboard. Market data, watchlists, portfolio tracking.',
-    tech: 'React, TypeScript, SASS, Node.js, Chart.js · Antigravity, Claude Code, Kilo',
-  },
-]
+function Projects() {
+  const [filter, setFilter] = useState('All')
+  const list = filter === 'All' ? projects : projects.filter((p) => p.category === filter)
 
-const experiences = [
-  { role: "Frontend Architect & Consultant", date: "Present", company: "TCS", bullets: ["Leading frontend architecture and consulting for enterprise engagements.", "Defining scalable UI standards and mentoring frontend teams."] },
-  { role: "Remote Frontend Contractor", date: "2023 — 2026", company: "Uplers", bullets: ["Built TradeSagar.com with React, TypeScript, Node.js, and Chart.js.", "AI-assisted spec-driven development using Kiro, Antigravity, and Claude Code.", "Delivered trading dashboards and market data dashboards for global clients."] },
-  { role: "Freelance Frontend Consultant", date: "2022 — 2023", company: "Independent", bullets: ["Forex24hr.com — responsive forex trading UI with charts and order flow.", "Frontend architecture audits, performance optimization, and legacy modernization."] },
-  { role: "Lead Front-end Developer", date: "Jun 2012 — 2022", company: "Persistent Systems Ltd., India", bullets: ["Led front-end teams; client point of contact for NA, Norway, Australia, Germany.", "Delivered across Pharma, Finance, Telecom, Big Data, E-commerce.", "Angular, AngularJS, Keycloak, D3, Highcharts; performance and cross-browser fixes.", "Agile Scrum and Waterfall SDLC ownership."] },
-  { role: "Front End", date: "Jan 2022 — Jan 2023", company: "The Skill Xchange", bullets: ["Next-gen UI with ES6, Angular 7+, SASS, HTML5.", "Code reviews and CI/CD with Azure DevOps."] },
-  { role: "UI Developer", date: "Apr 2012 — Jun 2012", company: "TEKsystems Inc., India", bullets: ["Converted wireframes to dynamic HTML/CSS layouts."] },
-  { role: "UI Developer", date: "Jan 2012 — Apr 2012", company: "Kizora Pvt. Ltd., India", bullets: ["Norway restaurant website; WordPress theme; responsive CSS3/jQuery."] },
-  { role: "Front-end Developer", date: "Oct 2010 — Jan 2012", company: "Alacrity Solution Pvt. Ltd., India", bullets: ["E-commerce templates; PSD slicing; cross-browser fixes incl. IE6."] },
-  { role: "Web Developer", date: "Aug 2009 — Oct 2010", company: "Supreme Startech Pvt. Ltd., India", bullets: ["ERP application UI; HTML/CSS/JS/jQuery; .NET back-end integration."] },
-];
+  return (
+    <Section id="projects" eyebrow="Projects" title="Selected work" intro="Enterprise platforms and trading products across Fintech, Pharma, Telecom, and more.">
+      <LayoutGroup>
+        <div className="filters" role="group" aria-label="Filter projects">
+          {projectFilters.map((f) => (
+            <button
+              key={f}
+              type="button"
+              className={`filter ${filter === f ? 'active' : ''}`}
+              aria-pressed={filter === f}
+              onClick={() => setFilter(f)}
+            >
+              {filter === f && <motion.span layoutId="filter-pill" className="filter-pill" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+              <span>{f}</span>
+            </button>
+          ))}
+        </div>
+        <motion.ul layout className="project-grid">
+          <AnimatePresence mode="popLayout">
+            {list.map((p) => (
+              <motion.li
+                layout
+                key={p.name}
+                className={`card project spotlight ${p.featured ? 'featured' : ''}`}
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className="project-top">
+                  <span className="domain">{p.domain}</span>
+                  {p.featured && <span className="featured-tag">Featured</span>}
+                </div>
+                <h3>{p.name}</h3>
+                <p>{p.desc}</p>
+                <ul className="tech" aria-label="Tech stack">
+                  {p.tech.map((t) => <li key={t}>{t}</li>)}
+                </ul>
+              </motion.li>
+            ))}
+          </AnimatePresence>
+        </motion.ul>
+      </LayoutGroup>
+    </Section>
+  )
+}
 
+function Services() {
+  return (
+    <Section id="services" eyebrow="Services" title="Freelance & consulting" intro="Bring me in for a focused audit, a full build, or to level up your team.">
+      <RevealGroup className="service-grid">
+        {services.map((s) => (
+          <motion.article key={s.name} className="card service spotlight" variants={reveal}>
+            <span className="icon-tile" aria-hidden="true">{s.icon}</span>
+            <h3>{s.name}</h3>
+            <p>{s.desc}</p>
+          </motion.article>
+        ))}
+      </RevealGroup>
 
-const skills = [
-  { name: 'Angular', desc: '6 years — AngularJS, Angular 7+, RxJS, Angular Material' },
-  { name: 'React', desc: 'Component architecture, hooks, state management' },
-  { name: 'TypeScript', desc: 'Typed, scalable enterprise codebases' },
-  { name: 'JavaScript', desc: '8 years — ES6+, modern patterns' },
-  { name: 'Node.js', desc: 'Backend APIs and trading dashboard services' },
-  { name: 'HTML5 / CSS3 / SASS', desc: 'Pixel-perfect, responsive, cross-browser' },
-  { name: 'AI-Assisted Dev', desc: 'Spec-driven development with Kiro, Antigravity, Claude Code' },
-  { name: 'Prompt Engineering', desc: 'AI workflows, codegen, review automation' },
-]
+      <h3 className="sub-title">How I work</h3>
+      <RevealGroup as="ol" className="process">
+        {process.map((p) => (
+          <motion.li key={p.step} variants={reveal}>
+            <span className="process-step">{p.step}</span>
+            <strong>{p.name}</strong>
+            <span>{p.desc}</span>
+          </motion.li>
+        ))}
+      </RevealGroup>
 
-const faqs = [
-  { q: 'What does a Frontend Architect do?', a: 'Designs scalable UI architecture, design systems, performance strategy, and mentors teams to ship enterprise web apps.' },
-  { q: 'Which technologies do you specialize in?', a: 'Angular, React, TypeScript, JavaScript, Node.js, SASS, HTML5/CSS3, and AI-assisted spec-driven development.' },
-  { q: 'Are you available for freelance and consulting?', a: 'Yes — frontend architecture, Angular/React apps, team mentoring, legacy modernization, and delivery leadership.' },
-]
+      <h3 className="sub-title">Frequently asked</h3>
+      <div className="faq">
+        {faqs.map((f) => (
+          <details key={f.q}>
+            <summary>{f.q}<span className="plus" aria-hidden="true" /></summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </Section>
+  )
+}
 
-const services = [
-  { name: 'Frontend Architecture', desc: 'Audits, scalable structure, performance, design systems.' },
-  { name: 'Angular / React Apps', desc: 'From MVP to enterprise — clean, maintainable code.' },
-  { name: 'Team Mentoring', desc: 'Upskill developers, code reviews, best practices.' },
-  { name: 'Modernization', desc: 'Legacy jQuery/AngularJS → modern stack.' },
-]
+function Contact() {
+  return (
+    <section id="contact" className="section" aria-labelledby="contact-title">
+      <div className="container">
+        <motion.div className="contact-card" variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
+          <p className="section-eyebrow"><span>Contact</span></p>
+          <h2 id="contact-title">Let's build something great.</h2>
+          <p>Have a project, idea, or team that needs frontend leadership? I'm available for freelance work and consulting.</p>
+          <div className="cta">
+            <a href={links.linkedin} className="btn btn-primary" target="_blank" rel="noopener noreferrer">Message on LinkedIn <Arrow /></a>
+            <a href={links.github} className="btn btn-ghost" target="_blank" rel="noopener noreferrer">GitHub profile <ExternalIcon /></a>
+          </div>
+          <p className="contact-note">Open to remote engagements with teams worldwide.</p>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
 
-const learning = [
-  { name: 'AI-Assisted Development', desc: 'Spec-driven development with Kiro, Antigravity, Claude Code.' },
-  { name: 'Prompt Engineering', desc: 'Building reliable AI workflows, codegen, and review automation.' },
-  { name: 'AI Agents & Architecture', desc: 'LLM orchestration, RAG patterns, agentic coding tools.' },
-  { name: 'Frontend Performance at Scale', desc: 'Core Web Vitals, runtime optimization, bundle budgets.' },
-]
+function BackToTop() {
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const onScroll = () => setShow(window.scrollY > window.innerHeight)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+  return (
+    <AnimatePresence>
+      {show && (
+        <motion.a
+          href="#hero"
+          className="to-top"
+          aria-label="Back to top"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 12 }}
+        >
+          ↑
+        </motion.a>
+      )}
+    </AnimatePresence>
+  )
+}
 
 export default function App() {
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const canvasRef = useRef(null)
+  const [paletteOpen, setPaletteOpen] = useState(false)
+  const active = useActiveSection(sectionIds)
+  usePointerGlow()
 
   useEffect(() => {
-    const c = canvasRef.current
-    if (!c) return
-    const ctx = c.getContext('2d')
-    let W, H, pts = []
-    const resize = () => { W = c.width = window.innerWidth; H = c.height = window.innerHeight }
-    resize()
-    window.addEventListener('resize', resize)
-    for (let i = 0; i < 70; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, r: Math.random() * 1.5 + 0.5 })
-    let raf
-    const draw = () => {
-      ctx.clearRect(0, 0, W, H)
-      pts.forEach(p => {
-        p.x += p.vx; p.y += p.vy
-        if (p.x < 0 || p.x > W) p.vx *= -1
-        if (p.y < 0 || p.y > H) p.vy *= -1
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(34,211,238,0.5)'; ctx.fill()
-      })
-      for (let i = 0; i < pts.length; i++) {
-        for (let j = i + 1; j < pts.length; j++) {
-          const d = Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y)
-          if (d < 140) {
-            ctx.strokeStyle = `rgba(20,184,166,${0.1 * (1 - d / 140)})`
-            ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke()
-          }
-        }
-      }
-      raf = requestAnimationFrame(draw)
-    }
-    draw()
-    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
+    console.log(
+      '%cHey there, fellow developer 👋%c\nLike what you see? Let\'s talk → ' + links.linkedin,
+      'font:600 16px system-ui;color:#14b8a6',
+      'font:13px system-ui;color:#9a9aa3',
+    )
   }, [])
 
   return (
-    <>
-      <canvas ref={canvasRef} style={{position:'fixed',inset:0,zIndex:-1,pointerEvents:'none'}} />
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="#hero" className="logo" onClick={() => setMobileOpen(false)}>HN</a>
-          {!mobileOpen && (
-            <div className="nav-links">
-              <a href="#hero">Home</a>
-              <a href="#about">About</a>
-              <a href="#skills">Skills</a>
-              <a href="#experience">Experience</a>
-              <a href="#projects">Projects</a>
-              <a href="#learning">Learning</a>
-              <a href="#services">Services</a>
-              <a href="#contact">Contact</a>
-            </div>
-          )}
+    <MotionConfig reducedMotion="user">
+      <a href="#main" className="skip-link">Skip to content</a>
+      <div className="bg" aria-hidden="true">
+        <div className="bg-grid" />
+        <div className="bg-glow" />
+        <div className="bg-orb orb-1" />
+        <div className="bg-orb orb-2" />
+      </div>
+
+      <Nav active={active} onOpenPalette={() => setPaletteOpen(true)} />
+      <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
+
+      <main id="main">
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Projects />
+        <Services />
+        <Contact />
+      </main>
+
+      <footer className="footer">
+        <div className="container footer-inner">
+          <span>© {new Date().getFullYear()} Homesh Nasre</span>
+          <span className="muted">Designed &amp; engineered with React + Vite</span>
+          <button type="button" className="footer-k" onClick={() => setPaletteOpen(true)}>
+            Press <kbd>⌘</kbd>/<kbd>Ctrl</kbd><kbd>K</kbd> to navigate
+          </button>
         </div>
-      </nav>
-
-      <section id="hero" className="hero">
-        <motion.div
-          className="hero-content"
-          variants={heroVariants}
-          initial="hidden"
-          animate="show"
-        >
-          <p className="eyebrow">Frontend Architect & Consultant</p>
-          <h1>Homesh Nasre</h1>
-          <p className="lead">
-            I'm Homesh — a frontend architect and consultant with 15+ years turning complex ideas into fast, beautiful web products. Open to freelance projects and consulting engagements.
-          </p>
-          <div className="cta">
-            <a href="#contact" className="btn btn-primary">Get in touch</a>
-            <a href="https://github.com/homesh123/" className="btn btn-ghost" target="_blank" rel="noopener noreferrer">GitHub</a>
-          </div>
-        </motion.div>
-      </section>
-
-      <section id="about" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>About</h2>
-            <p className="about-text">
-              I've spent 15+ years building web products end to end — from gathering requirements and shaping architecture to shipping, testing, and maintaining. I've led teams of 8+, mentored developers, and worked with clients across North America, Norway, Australia, and Germany in Pharma, Finance, Telecom, Big Data, and E-commerce. I care about clean code, performance, and shipping products people actually enjoy using.
-            </p>
-            <div className="stats">
-              <div className="stat"><span className="stat-num">15+</span><span className="stat-label">Years Experience</span></div>
-              <div className="stat"><span className="stat-num">7+</span><span className="stat-label">Major Projects</span></div>
-              <div className="stat"><span className="stat-num">8</span><span className="stat-label">Team Size Led</span></div>
-              <div className="stat"><span className="stat-num">4</span><span className="stat-label">Continents</span></div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="skills" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Skills</h2>
-            <div className="grid">
-              {skills.map((s) => (
-                <motion.div key={s.name} className="card" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <h3>{s.name}</h3>
-                  <p>{s.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="experience" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Experience</h2>
-            <div className="timeline">
-              {experiences.map((e) => (
-                <motion.div key={e.role} className="item" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <div className="item-head"><h3>{e.role}</h3><span className="item-date">{e.date}</span></div>
-                  <p className="item-company">{e.company}</p>
-                  <ul>
-                    {e.bullets.map((b, i) => <li key={i}>{b}</li>)}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="projects" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Projects</h2>
-            <div className="grid">
-              {projects.map((p) => (
-                <motion.div key={p.name} className="card" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <h3>{p.name}</h3>
-                  <p>{p.desc}</p>
-                  <small>{p.tech}</small>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="learning" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Currently Learning</h2>
-            <div className="grid">
-              {learning.map((l) => (
-                <motion.div key={l.name} className="card" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <h3>{l.name}</h3>
-                  <p>{l.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-            <p style={{ marginTop: 28, color: 'var(--muted)', maxWidth: 700, margin: '28px auto 0', lineHeight: 1.6 }}>
-              I study AI courses and certifications on generative AI, agentic workflows, and modern frontend architecture to keep my consulting practice current.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="services" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Freelance & Consulting</h2>
-            <div className="grid">
-              {services.map((s) => (
-                <motion.div key={s.name} className="card" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <h3>{s.name}</h3>
-                  <p>{s.desc}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="faq" className="section">
-        <div className="container">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Frequently Asked</h2>
-            <div className="faq">
-              {faqs.map((f) => (
-                <motion.div key={f.q} className="card" variants={item} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.12 }}>
-                  <details>
-                    <summary>{f.q}</summary>
-                    <p>{f.a}</p>
-                  </details>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <section id="contact" className="section">
-        <div className="container contact">
-          <motion.div variants={container} initial="hidden" animate="show">
-            <h2>Let's build something great</h2>
-            <p>Have a project, idea, or team that needs frontend leadership? I'm available for freelance work and consulting.</p>
-            <div className="cta">
-              <a href="https://www.linkedin.com/in/homesh-nasre-6086b51b/" className="btn btn-ghost" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              <a href="https://github.com/homesh123/" className="btn btn-primary" target="_blank" rel="noopener noreferrer">GitHub Profile</a>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      <footer>© {new Date().getFullYear()} Homesh Nasre</footer>
-    </>
+      </footer>
+      <BackToTop />
+    </MotionConfig>
   )
 }

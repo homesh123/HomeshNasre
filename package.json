@@ -2,9 +2,9 @@
   "name": "app",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "preview": "vite preview",
     "dev": "vite",
     "build": "vite build"
   },
@@ -15,7 +15,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/homesh123/HomeshNasre/issues"
   },
