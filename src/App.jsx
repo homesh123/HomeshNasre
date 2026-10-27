@@ -5,24 +5,26 @@ import Hero from './components/Hero'
 import CommandPalette from './components/CommandPalette'
 import { Section, RevealGroup, CountUp, reveal, usePointerGlow, useActiveSection, Arrow, ExternalIcon } from './components/ui'
 import {
-  sections, stats, domains, skillGroups, marquee, learning, experiences, visibleRoles,
-  projects, projectFilters, services, process, faqs, links,
+  sections, stats, domains, skillGroups, marquee, experiences, visibleRoles, aiPractices, aiPipeline,
+  exploring, projects, projectFilters, services, process, links,
 } from './data'
 
 const sectionIds = sections.map((s) => s.id)
 
 function About() {
   return (
-    <Section id="about" eyebrow="About" title="Architecture-minded. Product-focused.">
+    <Section id="about" eyebrow="About" title="I think in systems, and ship like a builder.">
       <div className="about-grid">
         <motion.div variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
           <p className="about-text">
-            I've spent 15+ years building web products end to end — from gathering requirements and shaping
-            architecture to shipping, testing, and maintaining. I've led teams of 8+, mentored developers, and worked
-            with clients across North America, Norway, Australia, and Germany.
+            In 2009 I was building ERP screens with jQuery, and soon after that, slicing PSDs and fighting IE6. Then
+            came ten years at Persistent Systems as a lead front-end developer: running a team of eight and being the
+            main point of contact for clients in North America, Norway, Australia and Germany.
           </p>
           <p className="about-text">
-            I care about clean code, performance, and shipping products people actually enjoy using.
+            These days I work as a UI architect and consultant. Most of the job is helping teams make good structural
+            calls early, the kind that keep a codebase pleasant to work in two years later. I care about clean code,
+            fast pages, and products people actually enjoy using.
           </p>
           <ul className="tag-row" aria-label="Industries">
             {domains.map((d) => <li key={d} className="tag">{d}</li>)}
@@ -43,7 +45,7 @@ function About() {
 
 function Skills() {
   return (
-    <Section id="skills" eyebrow="Skills" title="The toolkit" intro="Deep in the Angular & React ecosystems, with AI-assisted workflows on top.">
+    <Section id="skills" eyebrow="Skills" title="What I work with" intro="The tools I reach for every day, and know well enough to teach.">
       <RevealGroup className="skill-groups">
         {skillGroups.map((g) => (
           <motion.article key={g.title} className="card skill-group spotlight" variants={reveal}>
@@ -70,21 +72,57 @@ function Skills() {
           ))}
         </div>
       </div>
+    </Section>
+  )
+}
 
-      <motion.div className="learning" variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }}>
-        <div className="learning-head">
-          <span className="live-dot" aria-hidden="true" />
-          <h3>Currently learning</h3>
+function AI() {
+  return (
+    <Section
+      id="ai"
+      eyebrow="AI in practice"
+      title="AI is in my workflow, not just my bio."
+      intro="Here's how I actually use AI coding tools on real projects, without the hype."
+    >
+      <motion.ol
+        className="pipeline"
+        aria-label="How I build with AI"
+        variants={reveal}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, amount: 0.5 }}
+      >
+        {aiPipeline.map((p, i) => (
+          <li key={p} className={i === aiPipeline.length - 1 ? 'pipe-end' : ''}>
+            <span className="pipe-node">{p}</span>
+          </li>
+        ))}
+      </motion.ol>
+
+      <RevealGroup className="ai-grid">
+        {aiPractices.map((a, i) => (
+          <motion.article key={a.name} className="card spotlight ai-card" variants={reveal}>
+            <span className="ai-index">0{i + 1}</span>
+            <h3>{a.name}</h3>
+            <p>{a.desc}</p>
+          </motion.article>
+        ))}
+      </RevealGroup>
+
+      <motion.div className="ai-proof" variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
+        <div>
+          <p className="ai-proof-label">Case in point</p>
+          <p className="ai-proof-text">
+            <strong>TradeSagar.com</strong> was built this way: React, TypeScript and Node.js, with Kiro, Antigravity
+            and Claude Code doing the heavy lifting against a written spec.
+          </p>
         </div>
-        <ul className="learning-list">
-          {learning.map((l) => (
-            <li key={l.name}><strong>{l.name}</strong><span>{l.desc}</span></li>
-          ))}
-        </ul>
-        <p className="muted small">
-          I study AI courses and certifications on generative AI, agentic workflows, and modern frontend architecture
-          to keep my consulting practice current.
-        </p>
+        <div>
+          <p className="ai-proof-label">Exploring now</p>
+          <ul className="tag-row">
+            {exploring.map((e) => <li key={e} className="tag">{e}</li>)}
+          </ul>
+        </div>
       </motion.div>
     </Section>
   )
@@ -96,7 +134,7 @@ function Experience() {
   const hidden = experiences.length - visibleRoles
 
   return (
-    <Section id="experience" eyebrow="Experience" title="15+ years, one timeline">
+    <Section id="experience" eyebrow="Experience" title="Where I've been">
       <ol className="timeline">
         <AnimatePresence initial={false}>
           {shown.map((e, i) => (
@@ -143,7 +181,7 @@ function Projects() {
   const list = filter === 'All' ? projects : projects.filter((p) => p.category === filter)
 
   return (
-    <Section id="projects" eyebrow="Projects" title="Selected work" intro="Enterprise platforms and trading products across Fintech, Pharma, Telecom, and more.">
+    <Section id="projects" eyebrow="Work" title="Selected work" intro="Enterprise platforms and trading products, from pharma logistics to forex.">
       <LayoutGroup>
         <div className="filters" role="group" aria-label="Filter projects">
           {projectFilters.map((f) => (
@@ -191,7 +229,7 @@ function Projects() {
 
 function Services() {
   return (
-    <Section id="services" eyebrow="Services" title="Freelance & consulting" intro="Bring me in for a focused audit, a full build, or to level up your team.">
+    <Section id="services" eyebrow="Services" title="How I can help" intro="Most engagements start with one of these. Some turn into all four.">
       <RevealGroup className="service-grid">
         {services.map((s) => (
           <motion.article key={s.name} className="card service spotlight" variants={reveal}>
@@ -212,16 +250,6 @@ function Services() {
           </motion.li>
         ))}
       </RevealGroup>
-
-      <h3 className="sub-title">Frequently asked</h3>
-      <div className="faq">
-        {faqs.map((f) => (
-          <details key={f.q}>
-            <summary>{f.q}<span className="plus" aria-hidden="true" /></summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
-      </div>
     </Section>
   )
 }
@@ -232,8 +260,11 @@ function Contact() {
       <div className="container">
         <motion.div className="contact-card" variants={reveal} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
           <p className="section-eyebrow"><span>Contact</span></p>
-          <h2 id="contact-title">Let's build something great.</h2>
-          <p>Have a project, idea, or team that needs frontend leadership? I'm available for freelance work and consulting.</p>
+          <h2 id="contact-title">Got a frontend that needs a steady hand?</h2>
+          <p>
+            A new build, a codebase that's become hard to change, or a team that wants to get real value out of AI.
+            Tell me what you're working on. LinkedIn is the best place to reach me.
+          </p>
           <div className="cta">
             <a href={links.linkedin} className="btn btn-primary" target="_blank" rel="noopener noreferrer">Message on LinkedIn <Arrow /></a>
             <a href={links.github} className="btn btn-ghost" target="_blank" rel="noopener noreferrer">GitHub profile <ExternalIcon /></a>
@@ -299,9 +330,10 @@ export default function App() {
       <main id="main">
         <Hero />
         <About />
-        <Skills />
+        <AI />
         <Experience />
         <Projects />
+        <Skills />
         <Services />
         <Contact />
       </main>
@@ -309,7 +341,7 @@ export default function App() {
       <footer className="footer">
         <div className="container footer-inner">
           <span>© {new Date().getFullYear()} Homesh Nasre</span>
-          <span className="muted">Designed &amp; engineered with React + Vite</span>
+          <span className="muted">Designed and built with React, Vite and a little help from AI</span>
           <button type="button" className="footer-k" onClick={() => setPaletteOpen(true)}>
             Press <kbd>⌘</kbd>/<kbd>Ctrl</kbd><kbd>K</kbd> to navigate
           </button>

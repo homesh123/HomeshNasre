@@ -7,10 +7,11 @@ import { Arrow, ExternalIcon } from './ui'
 // its syntax colouring.
 const code = [
   [['k', 'const '], ['v', 'homesh'], ['p', ' = {']],
-  [['p', '  '], ['key', 'role'], ['p', ': '], ['s', "'Frontend Architect'"], ['p', ',']],
-  [['p', '  '], ['key', 'experience'], ['p', ': '], ['s', "'15+ years'"], ['p', ',']],
+  [['p', '  '], ['key', 'role'], ['p', ': '], ['s', "'UI Architect & Consultant'"], ['p', ',']],
+  [['p', '  '], ['key', 'since'], ['p', ': '], ['n', '2009'], ['p', ',']],
   [['p', '  '], ['key', 'stack'], ['p', ': ['], ['s', "'Angular'"], ['p', ', '], ['s', "'React'"], ['p', ', '], ['s', "'TS'"], ['p', '],']],
-  [['p', '  '], ['key', 'domains'], ['p', ': ['], ['s', "'Pharma'"], ['p', ', '], ['s', "'Fintech'"], ['p', ', '], ['s', "'Telecom'"], ['p', '],']],
+  [['p', '  '], ['key', 'ai'], ['p', ': ['], ['s', "'Claude Code'"], ['p', ', '], ['s', "'Kiro'"], ['p', ', '], ['s', "'Antigravity'"], ['p', '],']],
+  [['p', '  '], ['key', 'domains'], ['p', ': ['], ['s', "'Fintech'"], ['p', ', '], ['s', "'Pharma'"], ['p', ', '], ['s', "'Telecom'"], ['p', '],']],
   [['p', '  '], ['key', 'available'], ['p', ': '], ['k', 'true'], ['p', ','], ['c', ' // freelance & consulting']],
   [['p', '}']],
 ]
@@ -104,21 +105,22 @@ export default function Hero() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <motion.p className="badge" {...fade(0)}>
-            <span className="pulse" aria-hidden="true" /> Available for freelance &amp; consulting
+            <span className="pulse" aria-hidden="true" /> Open to consulting &amp; freelance work
           </motion.p>
           <motion.h1 {...fade(0.08)}>
             Homesh Nasre
           </motion.h1>
           <motion.p className="hero-tagline" {...fade(0.16)}>
-            Frontend Architect who builds <RotatingWord /> web products.
+            UI architect. I build frontends that <RotatingWord />.
           </motion.p>
           <motion.p className="lead" {...fade(0.24)}>
-            15+ years turning complex ideas into fast, beautiful web products — leading teams, shaping architecture,
-            and shipping for clients across North America, Europe, and Australia.
+            I've been building for the web since 2009, from IE6 fixes to enterprise Angular and React platforms.
+            Now I help teams get their frontend architecture right, and I build with AI in the loop, from the
+            spec to the code review.
           </motion.p>
           <motion.div className="cta" {...fade(0.32)}>
-            <a href="#contact" className="btn btn-primary">Start a project <Arrow /></a>
-            <a href="#projects" className="btn btn-ghost">View work</a>
+            <a href="#contact" className="btn btn-primary">Work with me <Arrow /></a>
+            <a href="#projects" className="btn btn-ghost">See my work</a>
             <a href={links.github} className="btn btn-link" target="_blank" rel="noopener noreferrer">
               GitHub <ExternalIcon />
             </a>
