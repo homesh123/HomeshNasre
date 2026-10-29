@@ -1,0 +1,15 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  // Kilo Code project configuration
+  // Docs: https://kilo.ai/docs
+
+  // Always-on rules — loaded into every prompt, including the free model.
+  // Keep this list short; each file costs tokens on every request.
+  "instructions": [
+    ".kilo/rules/master-thought-process.md"
+  ]
+
+  // Skills are loaded conditionally when the task matches the skill description.
+  // Place them in .kilo/skills/<skill-name>/SKILL.md (already done).
+  // No extra config needed — Kilo discovers them automatically on startup.
+}
