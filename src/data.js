@@ -19,11 +19,11 @@ export const heroWords = ['scale', 'stay fast', 'age well', 'ship sooner']
 export const stats = [
   { value: 15, suffix: '+', label: 'Years building for the web' },
   { value: 8, suffix: '', label: 'Developers led on one team' },
-  { value: 5, suffix: '', label: 'Industries shipped for' },
+  { value: 6, suffix: '', label: 'Industries shipped for' },
   { value: 4, suffix: '', label: 'Continents of clients' },
 ]
 
-export const domains = ['Pharma', 'Finance', 'Telecom', 'Big Data', 'E-commerce']
+export const domains = ['Pharma', 'Finance', 'Telecom', 'Big Data', 'E-commerce', 'Food']
 
 export const aiPractices = [
   {
@@ -71,21 +71,23 @@ export const skillGroups = [
       { name: 'TypeScript', desc: 'Typed, large enterprise codebases' },
       { name: 'JavaScript', desc: 'ES6+ and the history behind it, back to IE6' },
       { name: 'HTML5 / CSS3 / SASS', desc: 'Pixel-perfect, responsive, cross-browser' },
+      { name: 'Tailwind CSS', desc: 'Utility-first design systems and component styling' },
     ],
   },
 ]
 
 export const marquee = [
   'Angular', 'React', 'TypeScript', 'JavaScript', 'Node.js', 'RxJS', 'SASS', 'D3', 'Highcharts',
-  'Chart.js', 'Keycloak', 'Angular Material', 'Azure DevOps', 'Claude Code', 'Kiro', 'Antigravity',
+  'Chart.js', 'Tailwind', 'Keycloak', 'Angular Material', 'SonarQube', 'Jest', 'Amazon Kiro',
+  'Azure DevOps', 'Claude Code', 'Kiro', 'Antigravity',
 ]
 
 export const experiences = [
-  { role: 'Frontend Architect & Consultant', date: 'Present', company: 'TCS', bullets: ['Lead frontend architecture on enterprise engagements and set the UI standards teams build on.', 'Mentor frontend developers and review the decisions that are expensive to undo later.'] },
+  { role: 'Frontend Architect & Consultant', date: 'Present', company: 'TCS', bullets: ['Lead frontend architecture on enterprise engagements and set the UI standards teams build on.', 'Led the front end as lead engineer on McCain Foods shift management and the Mondelez quality management portal: Angular 17+, Node.js, Amazon Kiro, Tailwind, D3, SonarQube and Jest.', 'Gathered project requirements and brainstormed new features with clients, then translated them into shipped UI.', 'Mentor frontend developers and review the decisions that are expensive to undo later.'] },
   { role: 'Remote Frontend Contractor', date: '2023 — 2026', company: 'Uplers', bullets: ['Built TradeSagar.com, a trading and investment dashboard, with React, TypeScript, Node.js and Chart.js.', 'Worked spec-first with Kiro, Antigravity and Claude Code: AI for speed, review for quality.', 'Delivered trading and market data dashboards for clients around the world.'] },
   { role: 'Freelance Frontend Consultant', date: '2022 — 2023', company: 'Independent', bullets: ['Built the Forex24hr.com trading UI: responsive layouts, charts and order flow.', 'Ran architecture audits, performance tuning and legacy modernization for client teams.'] },
   { role: 'Front-end Developer', date: 'Jan 2022 — Jan 2023', company: 'The Skill Xchange', bullets: ['Built new UI with ES6, Angular 7+, SASS and HTML5.', 'Reviewed code and set up CI/CD on Azure DevOps.'] },
-  { role: 'Lead Front-end Developer', date: 'Jun 2012 — 2022', company: 'Persistent Systems Ltd., India', bullets: ['Led front-end teams and was the main client contact for customers in North America, Norway, Australia and Germany.', 'Shipped products for pharma, finance, telecom, big data and e-commerce companies.', 'Worked deep in Angular, AngularJS, Keycloak, D3 and Highcharts, and owned performance and cross-browser issues.', 'Ran delivery in both Agile Scrum and Waterfall.'] },
+  { role: 'Lead Front-end Developer', date: 'Jun 2012 — 2022', company: 'Persistent Systems Ltd., India', bullets: ['Led front-end teams and was the main client contact for customers in North America, Norway, Australia and Germany.', 'Shipped products for pharma, finance, telecom, big data, e-commerce and food companies.', 'Worked deep in Angular, AngularJS, Keycloak, D3 and Highcharts, and owned performance and cross-browser issues.', 'Ran delivery in both Agile Scrum and Waterfall.'] },
   { role: 'UI Developer', date: 'Apr 2012 — Jun 2012', company: 'TEKsystems Inc., India', bullets: ['Turned wireframes into working HTML/CSS layouts.'] },
   { role: 'UI Developer', date: 'Jan 2012 — Apr 2012', company: 'Kizora Pvt. Ltd., India', bullets: ['Built a website and WordPress theme for a restaurant in Norway, responsive with CSS3 and jQuery.'] },
   { role: 'Front-end Developer', date: 'Oct 2010 — Jan 2012', company: 'Alacrity Solution Pvt. Ltd., India', bullets: ['E-commerce templates, PSD slicing, and a lot of IE6 fixes.'] },
@@ -95,7 +97,7 @@ export const experiences = [
 // Roles shown before the "earlier roles" toggle
 export const visibleRoles = 5
 
-export const projectFilters = ['All', 'React', 'Angular', 'Web']
+export const projectFilters = ['All', 'React', 'Angular', 'Web', 'Food']
 
 export const projects = [
   {
@@ -104,6 +106,22 @@ export const projects = [
     tech: ['React', 'TypeScript', 'SASS', 'Node.js', 'Chart.js', 'Antigravity', 'Claude Code', 'Kilo'],
     domain: 'Fintech',
     category: 'React',
+    featured: true,
+  },
+  {
+    name: 'McCain Shift Management',
+    desc: 'Shift and workforce scheduling for McCain Foods. Led the front end as lead engineer: Angular 17+, Node.js back end, Amazon Kiro for AI-assisted development, Tailwind for the design system.',
+    tech: ['Angular 17+', 'Node.js', 'Amazon Kiro', 'Tailwind', 'TypeScript'],
+    domain: 'Food',
+    category: 'Angular',
+    featured: true,
+  },
+  {
+    name: 'Mondelez Quality Management Portal',
+    desc: 'Quality management portal for Mondelez. Led the front end as lead engineer: requirement gathering with the client, feature brainstorming, SonarQube for code quality, Jest for tests, D3 for charting.',
+    tech: ['Angular 17+', 'D3', 'SonarQube', 'Jest', 'TypeScript', 'Tailwind'],
+    domain: 'Food',
+    category: 'Angular',
     featured: true,
   },
   {

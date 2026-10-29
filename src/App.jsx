@@ -181,7 +181,7 @@ function Projects() {
   const list = filter === 'All' ? projects : projects.filter((p) => p.category === filter)
 
   return (
-    <Section id="projects" eyebrow="Work" title="Selected work" intro="Enterprise platforms and trading products, from pharma logistics to forex.">
+    <Section id="projects" eyebrow="Work" title="Selected work" intro="Enterprise platforms and trading products, from pharma logistics to forex, and food supply chains.">
       <LayoutGroup>
         <div className="filters" role="group" aria-label="Filter projects">
           {projectFilters.map((f) => (
